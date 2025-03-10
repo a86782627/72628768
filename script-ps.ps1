@@ -15,7 +15,7 @@ try {
 
     #/// EXECUTE THE SECOND PART OF THE SCRIPT (LOCAL OPERATIONS) \\#
     # Download the image (decoy)
-    $imageUrl = "https://png.pngtree.com/png-vector/20191121/ourmid/pngtree-blue-bird-vector-or-color-illustration-png-image_2013004.jpg"
+    $imageUrl = "https://img.freepik.com/free-photo/abstract-surface-textures-white-concrete-stone-wall_74190-8189.jpg"
     $imagePath = "$env:TEMP\blue-bird.jpg"
     Invoke-WebRequest -Uri $imageUrl -OutFile $imagePath
     
